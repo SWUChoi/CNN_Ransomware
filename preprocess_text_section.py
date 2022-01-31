@@ -1,10 +1,9 @@
-import os, sys
+import os
 from PIL import Image
 import pefile
 import numpy as np
 
 def to_png(binaryValues):
-    binaryData = binaryValues
     width = 0
     if (width == 0):
         size = len(binaryValues)
@@ -38,13 +37,14 @@ def to_png(binaryValues):
 
         image_name = rfile+ "(text).png"
 
-        save_path = path + '/text_section/Sodinokibi_text_section_img/'
+        save_path = path + '/text_section_img/' + cate + '_text_section_img/'
 
         image.save(save_path + image_name)
 
         print(image_name + " Greyscale image")
 
 
+# opcode text 추출
 def opcode_Get(file_path):
     try:
         pe = pefile.PE(file_path,fast_load=True)
@@ -63,19 +63,18 @@ def opcode_Get(file_path):
     except: 
         return
         
-path = '전처리할 랜섬웨어 경로'
 
-folder_list = os.listdir(path)
 
-for folder in folder_list:
-    folder_path = path + folder
-    # number = folder.split(' ')[0]
+Category = ['DarkSide', 'Gandcrab', 'Maze', 'NetWalker', 'Ryuk', 'Sodinokibi']
 
-    file_list = os.listdir(folder_path)
+for cate in Category:
+    path = '/home/kali/Desktop/Ransomware_Research/Samples(1101)/' + cate + '/'
+
+    file_list = os.listdir(path)
 
     for rfile in file_list:
-        filename = path + '/' + folder + '/' + rfile
-        # print(filename)
+        filename = path + rfile
+        print(filename)
 
         binaryValues = []
         file = open(filename, 'rb')
@@ -96,7 +95,7 @@ for folder in folder_list:
                 to_png(text_section)
             
             except Exception as e:
-                print("error msg : ", e)
+                    print("error msg : ", e)
 
 
 # 코드 참고

@@ -1,4 +1,4 @@
-import os, sys
+import os
 from PIL import Image
 import pefile
 import numpy as np
@@ -37,17 +37,18 @@ def to_png(binaryValues):
 
         image_name = rfile+ "(header).png"
 
-        save_path = path + '/header_section/Sodinokibi_header_section_img/'
+        save_path = path + '/header_section_img/' + cate + '_header_section_img/'
 
         image.save(save_path + image_name)
 
         print(image_name + "_header_Greyscale_image")
 
 
+# opcode header 추출
 def opcode_Get(file_path):
     try:
         pe = pefile.PE(file_path,fast_load=True)
-        entry = pe.DOS_HEADER.e_lfanew     # 파일의 시작점에서부터 PE 헤더까지의 오프셋 vlaue
+        entry = pe.DOS_HEADER.e_lfanew
         end = entry + 0xF7
         print(hex(entry))
         print(hex(end))
@@ -62,19 +63,17 @@ def opcode_Get(file_path):
         return
         
 
-path = '전처리할 랜섬웨어 경로'
 
-folder_list = os.listdir(path)
+Category = ['DarkSide', 'Gandcrab', 'Maze', 'NetWalker', 'Ryuk', 'Sodinokibi']
 
-for folder in folder_list:
-    folder_path = path + folder
-    # number = folder.split(' ')[0]
+for cate in Category:
+    path = '/home/kali/Desktop/Ransomware_Research/Samples(1101)/' + cate + '/'
 
-    file_list = os.listdir(folder_path)
+    file_list = os.listdir(path)
 
     for rfile in file_list:
-        filename = path + '/' + folder + '/' + rfile
-        # print(filename)
+        filename = path + rfile
+        print(filename)
 
         binaryValues = []
         file = open(filename, 'rb')
@@ -86,7 +85,7 @@ for folder in folder_list:
                 pass
             data = file.read(1) 
         
-        print('\n' + str(binaryValues[0]) + ' ' + str(binaryValues[1]))
+        print(str(binaryValues[0]) + ' ' + str(binaryValues[1]))
         
         if binaryValues[0] == 77 and binaryValues[1] == 90:
             try:
@@ -95,7 +94,7 @@ for folder in folder_list:
                 to_png(header_section)
             
             except Exception as e:
-                print("error msg : ", e)
+                    print("error msg : ", e)
 
 
 # 코드 참고
